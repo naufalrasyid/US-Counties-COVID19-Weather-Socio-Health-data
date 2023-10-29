@@ -1,0 +1,228 @@
+```{r}
+#Naufal Rasyid Sutansyah
+#load library
+library(readr)
+library(psych)
+library(ggplot2)
+
+```
+
+```{r}
+#Load 3 data set
+setwd('C:/Users/LENOVO THINKPAD T460/Downloads/LabASG1')
+getwd()
+
+data_Covid19 <- read_csv("C:/Users/LENOVO THINKPAD T460/Downloads/LabASG1/US_counties_COVID19_health_weather_data.csv")
+data_Geometry <- read_csv("C:/Users/LENOVO THINKPAD T460/Downloads/LabASG1/us_county_geometry.csv")
+data_SocioHealth <- read_csv("C:/Users/LENOVO THINKPAD T460/Downloads/LabASG1/us_county_sociohealth_data.csv")
+```
+
+```{r}
+#1. dataCovid19 Check
+
+#checking top dataset
+head(data_Covid19)
+#checking dataset
+str(data_Covid19)
+#checking missing values
+sum(is.na(data_Covid19))
+#checking dulicated data
+sum(duplicated(data_Covid19))
+#summary statistic
+summary(data_Covid19)
+```
+```{r}
+#load library
+library(naniar)
+library(scales)
+# Visualize missing values in data_Covid19 by variables
+missing_plot <- gg_miss_var(data_Covid19) +
+  scale_y_continuous(labels = scales::number_format(scale = 1, accuracy = 1, big.mark = ",", decimal.mark = "."))
+#print result
+(missing_plot)
+```
+
+
+```{r}
+#delete missing values
+data_Covid19_clean <- na.omit(data_Covid19)
+#checking missing values
+sum(is.na(data_Covid19_clean))
+
+#plotting missing values
+missing_plot <- gg_miss_var(data_Covid19_clean) +
+  scale_y_continuous(labels = scales::number_format(scale = 1, accuracy = 1, big.mark = ",", decimal.mark = "."))
+#print result
+(missing_plot)
+```
+
+
+```{r}
+
+str(data_Covid19_clean)
+
+```
+
+
+```{r}
+#drop coloumn not really important to my visualization
+library(dplyr)
+column_Covid19_clean<- select(data_Covid19_clean, date, county, state, fips, cases, deaths, num_deaths, total_population, population, percent_vaccinated)
+
+
+#top 10 case by state
+top10_cases_state <- column_Covid19_clean %>%
+  group_by(state) %>%
+  summarize(total_cases = sum(cases)) %>%
+  arrange(desc(total_cases)) %>%
+  head(10)
+
+(top10_cases)
+
+
+ggplot(data = top10_cases_state, aes(x = reorder(state, total_cases), y = total_cases)) +
+  geom_bar(stat = "identity", fill = "#D55E00") +
+  geom_text(aes(label = total_cases), position = position_stack(vjust = 0.5), color = "white", size = 3.2) +
+  labs(title = "Top 10 States by Case",
+       x = "State",
+       y = "Total Cases") +
+  theme_minimal() +
+  coord_flip()
+
+ 
+```
+
+```{r}
+#top 10 case by county
+top10_cases_county <- column_Covid19_clean %>%
+  group_by(county) %>%
+  summarize(total_cases = sum(cases)) %>%
+  arrange(desc(total_cases)) %>%
+  head(10)
+
+(top10_cases_county)
+
+
+ggplot(data = top10_cases_county, aes(x = reorder(county, total_cases), y = total_cases)) +
+  geom_bar(stat = "identity", fill =  "#D55E00") +
+  geom_text(aes(label = total_cases), position = position_stack(vjust = 0.5), color = "white", size = 3.2) +
+  labs(title = "Top 10 County by Case",
+       x = "State",
+       y = "Total Cases") +
+  theme_minimal() +
+  coord_flip()
+
+
+```
+
+```{r}
+top10_deaths_state <- column_Covid19_clean %>%
+  group_by(state) %>%
+  summarize(total_deaths = sum(deaths)) %>%
+  arrange(desc(total_deaths)) %>%
+  head(10)
+
+(top10_deaths_state)
+
+
+ggplot(data = top10_deaths_state, aes(x = reorder(state, total_deaths), y = total_deaths)) +
+  geom_bar(stat = "identity", fill =  "#002B5B") +
+  geom_text(aes(label = total_deaths), position = position_stack(vjust = 0.5), color = "white", size = 3.2) +
+  labs(title = "Top 10 States by Deaths",
+       x = "State",
+       y = "Total Deaths") +
+  theme_minimal() +
+  coord_flip()
+```
+
+
+```{r}
+#to10 death by county
+top10_deaths_county <- column_Covid19_clean %>%
+  group_by(county) %>%
+  summarize(total_deaths = sum(deaths)) %>%
+  arrange(desc(total_deaths)) %>%
+  head(10)
+
+(top10_deaths_county)
+
+
+ggplot(data = top10_cases_county, aes(x = reorder(county, total_cases), y = total_cases)) +
+  geom_bar(stat = "identity", fill =  "#002B5B") +
+  geom_text(aes(label = total_cases), position = position_stack(vjust = 0.5), color = "white", size = 3.2) +
+  labs(title = "Top 10 County by Deaths",
+       x = "State",
+       y = "Total Cases") +
+  theme_minimal() +
+  coord_flip()
+
+```
+```{r}
+#Case increase by date
+ggplot(data = column_Covid19_clean, aes(x = date, y = cases)) +
+  geom_line() +
+  labs(title = "Increase of Cases by Date",
+       x = "Date",
+       y = "Number of Cases") +
+  theme_minimal()
+```
+```{r}
+#Most vacinnated by states
+ggplot(data = column_Covid19_clean, aes(x = percent_vaccinated, y = state)) +
+  geom_bar(stat = "identity", fill = "#C64C3C", width = 0.7) +
+  labs(title = "Vaccination Percentage by State",
+       x = "Vaccination Percentage",
+       y = "State") +
+  theme_minimal()
+
+```
+
+```{r}
+#2. Data Geometry Check
+
+#checking top dataset
+head(data_Geometry)
+#checking dataset
+str(data_Geometry)
+#checking missing values
+sum(is.na(data_Geometry))
+#checking dulicated data
+sum(duplicated(data_Geometry))
+```
+
+```{r}
+#2. Data Geometry Check
+
+#checking top dataset
+head(data_SocioHealth)
+#checking dataset
+str(data_SocioHealth)
+#checking missing values
+sum(is.na(data_SocioHealth))
+#checking dulicated data
+sum(duplicated(data_SocioHealth))
+```
+```{r}
+# Visualize missing values in data_sociohealth by variables
+missing_plot1 <- gg_miss_var(data_SocioHealth) +
+  scale_y_continuous(labels = scales::number_format(scale = 1, accuracy = 1, big.mark = ",", decimal.mark = "."))
+#print result
+(missing_plot1)
+
+```
+```{r}
+#delete missing values
+data_SocioHealth_clean <- na.omit(data_SocioHealth)
+#checking missing values
+sum(is.na(data_SocioHealth_clean))
+
+(data_SocioHealth_clean)
+
+#plotting missing values
+missing_plot1 <- gg_miss_var(data_SocioHealth_clean) +
+  scale_y_continuous(labels = scales::number_format(scale = 1, accuracy = 1, big.mark = ",", decimal.mark = "."))
+#print result
+(missing_plot1)
+```
+`
+
