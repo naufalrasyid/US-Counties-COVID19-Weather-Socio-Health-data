@@ -1,1 +1,2 @@
-# US-Counties-COVID19-Weather-Socio-Health-data
+# About This Project
+In this project, I conducted in-depth Exploratory Data Analysis (EDA) on US-Counties-COVID19-Weather-Socio-Health-dataset for gain valuable insights, then using Tableau, I transformed complex data into visually compelling representations, making the information readily accessible and actionable. This project showcases my ability to turn data into insights that matter, making it a valuable asset for any team seeking to harness the power of data in the socio-health context."
